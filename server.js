@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const colors = require('colors');
 const connectDB = require('./config/db');
 
 //Load env file
@@ -31,7 +32,7 @@ const server = app.listen(
 
 //Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise)=>{
-    console.log('Error: '+err.message);
+    console.log('Error: '+err.message.red);
 
     //Close server and kill process
     server.close(() => process.exit(1));
