@@ -1,5 +1,6 @@
 const ErrorResponse = require("../utils/errorResponse");
 
+//Takes all parameters as it will always run but we're only interested in the error and response
 const errorHandler = (err, req, res, next) => {
     let error = { ...err };
     error.message = err.message;
