@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const BootcampSchema = new mongoose.Schema({
     name: {
@@ -102,6 +103,19 @@ const BootcampSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'User'
     } 
+});
+
+//Create bootcamp slulg from the name
+// pre will run before an operation (mongoose middleware)
+// we can't use arrow function due scope
+// 'this' will be the document performing the operation
+BootcampSchema.pre('save', function(next){
+    this.slug = slugify(this.name, {
+        lower: true
+    });
+
+    //Call next middleware
+    next();
 });
 
 module.exports = mongoose.model('Bootcamp', BootcampSchema);
