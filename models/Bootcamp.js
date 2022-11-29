@@ -103,7 +103,10 @@ const BootcampSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User'
-    } 
+    }, 
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
 
 //Create bootcamp slulg from the name
@@ -137,6 +140,20 @@ BootcampSchema.pre('save', async function(next){
     this.address = undefined;
     
     next();
+});
+
+//Cascade delete courses
+BootcampSchema.pre('remove', async function(next){
+    await this.model('Course').deleteMany({ bootcamp: this._id });
+    next();
+});
+
+//Reverse populate with virtuals (get child records)
+BootcampSchema.virtual('courses', {
+    ref: 'Course',
+    localField: '_id',
+    foreignField: 'bootcamp',
+    justOne: false
 });
 
 module.exports = mongoose.model('Bootcamp', BootcampSchema);
